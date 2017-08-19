@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>pgweb</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <link rel="stylesheet" href="/public/css/bootstrap.css"></link>
+  <link rel="stylesheet" href="/public/css/font-awesome.css"></link>
+  <link rel="stylesheet" href="/public/css/app.css"></link>
+  <link rel="icon" type="image/x-icon" href="/public/img/icon.ico" />
+  <script type="text/javascript" src="/public/js/jquery.js"></script>
+  <script type="text/javascript" src="/public/js/ace.js"></script>
+  <script type="text/javascript" src="/public/js/ace-pgsql.js"></script>
+  <script type="text/javascript" src="/public/js/bootstrap-contextmenu.js"></script>
+  <script type="text/javascript" src="/public/js/app.js"></script>
+  <base href="/"></base>
+  <template id="navbar-template"></template>
+  <template id="navbar-html-template">
+    <a href="/home">Home</a>
+    <a class="database" href="/pgweb?bookmarkid=${bookmarkid}">
+      <!-- https://www.flaticon.com/free-icon/database_149749#term=database&page=1&position=41 -->
+      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58.201 58.201" style="enable-background:new 0 0 58.201 58.201;" xml:space="preserve">
+      <g>
+        <path d="M31.707,33.07c-0.87,0.027-1.74,0.042-2.606,0.042c-0.869,0-1.742-0.014-2.614-0.042
+          c-7.341-0.201-13.191-1.238-17.403-2.717C7.104,29.685,5.409,28.899,4.1,28v7.111v0.5v0.5V37.4c2.846,2.971,12.394,5.711,25,5.711
+          s22.154-2.74,25-5.711v-1.289v-0.5v-0.5V28c-1.318,0.905-3.028,1.697-5.025,2.367C44.865,31.839,39.027,32.87,31.707,33.07z"/>
+        <path d="M4.1,14.889V22v0.5V23v1.289c2.638,2.754,11.033,5.31,22.286,5.668c0.115,0.004,0.233,0.005,0.349,0.008
+          c0.326,0.009,0.651,0.018,0.982,0.023C28.174,29.996,28.635,30,29.1,30s0.926-0.004,1.383-0.011
+          c0.33-0.005,0.656-0.014,0.982-0.023c0.116-0.003,0.234-0.005,0.349-0.008c11.253-0.359,19.648-2.915,22.286-5.668V23v-0.5V22
+          v-7.111C49.233,18.232,38.944,20,29.1,20S8.968,18.232,4.1,14.889z"/>
+        <path d="M53.965,8.542C52.843,4.241,44.215,0,29.1,0C14.023,0,5.404,4.22,4.247,8.51C4.162,8.657,4.1,8.818,4.1,9v0.5v1.806
+          C6.937,14.267,16.417,17,29.1,17s22.164-2.733,25-5.694V9.5V9C54.1,8.832,54.044,8.681,53.965,8.542z"/>
+        <path d="M4.1,41v8.201c0,0.162,0.043,0.315,0.117,0.451c1.181,4.895,11.747,8.549,24.883,8.549c13.106,0,23.655-3.639,24.875-8.516
+          c0.08-0.144,0.125-0.309,0.125-0.484v-8.199c-4.135,2.911-12.655,5.199-25,5.199C16.754,46.201,8.234,43.911,4.1,41z"/>
+      </g>
+      </svg>
+      ${name}
+    </a>
+    <a id="table_content" href="/pgweb/rows?bookmarkid=${bookmarkid}">Rows</a>
+    <a id="table_structure" href="/pgweb/structures?bookmarkid=${bookmarkid}">Structures</a>
+    <a id="table_indexes" href="/pgweb/indexes?bookmarkid=${bookmarkid}">Indexes</a>
+    <a id="table_constraints" href="/pgweb/constraints?bookmarkid=${bookmarkid}">Constraints</a>
+    <a id="table_query" href="/pgweb/query?bookmarkid=${bookmarkid}">SQL Query</a>
+    <a id="table_history" href="/pgweb/history?bookmarkid=${bookmarkid}">History</a>
+    <a id="table_activity" href="/pgweb/activity?bookmarkid=${bookmarkid}">Activity</a>
+    <a id="table_connection" href="/pgweb/connection?bookmarkid=${bookmarkid}">Connection</a>
+  </template>
+</head>
+<body>
+  <div id="main">
+    <div id="sidebar">
+      <div class="tables-list">
+        <div class="wrap">
+          <div id="objects" style="padding-top: 0"></div>
+        </div>
+      </div>
+      <div class="table-information">
+        <div class="wrap">
+          <div class="title">Table Information</div>
+          <ul>
+            <li>Size: <span id="table_total_size"></span></li>
+            <li>Data size: <span id="table_data_size"></span></li>
+            <li>Index size: <span id="table_index_size"></span></li>
+            <li>Estimated rows: <span id="table_rows_count"></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="body" style="top: 0">
+      <div id="input">
+        <div class="wrapper">
+          <div id="custom_query"></div>
+          <div class="actions">
+            <input type="button" id="run" value="Run Query" class="btn btn-sm btn-primary" />
+            <input type="button" id="explain" value="Explain Query" class="btn btn-sm btn-default" />
+            <div id="query_progress">Please wait, query is executing...</div>
+            <div class="pull-right">
+              <span id="result-rows-count"></span>
+              <input type="button" id="json" value="JSON" class="btn btn-sm btn-default" />
+              <input type="button" id="csv" value="CSV" class="btn btn-sm btn-default" />
+              <input type="button" id="xml" value="XML" class="btn btn-sm btn-default" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="output">
+        <div class="wrapper">
+          <table id="results" class="table"></table>
+        </div>
+      </div>
+      <div id="pagination">
+        <form class="filters" action="#" id="rows_filter">
+          <span>Search</span>
+          <select class="column form-control"></select>
+          <select class="filter form-control">
+            <option value="">Select filter</option>
+            <option value="equal">=</option>
+            <option value="not_equal">&ne;</option>
+            <option value="greater">&gt;</option>
+            <option value="greater_eq">&ge;</option>
+            <option value="less">&lt;</option>
+            <option value="less_eq">&le;</option>
+            <option value="like">LIKE</option>
+            <option value="ilike">ILIKE</option>
+            <option value="null">IS NULL</option>
+            <option value="not_null">NOT NULL</option>
+          </select>
+          <input type="text" class="form-control" placeholder="Search query" />
+          <button class="btn btn-primary btn-sm apply-filters" type="submit">Apply</button>
+          <button class="btn btn-default btn-sm reset-filters"><i class="fa fa-times"></i></button>
+        </form>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-sm prev-page" disabled="disabled"><i class="fa fa-angle-left"></i></button>
+          <button type="button" class="btn btn-default btn-sm page change-limit" title="Click to change row limit"></button>
+          <button type="button" class="btn btn-default btn-sm next-page"><i class="fa fa-angle-right"></i></button>
+        </div>
+        <div class="current-page" data-page="1" data-pages="1">
+          <span id="total_records"></span> rows
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="tables_context_menu">
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="#" data-action="export" data-format="json">Export to JSON</a></li>
+      <li><a href="#" data-action="export" data-format="csv">Export to CSV</a></li>
+      <li><a href="#" data-action="export" data-format="xml">Export to XML</a></li>
+      <li class="divider"></li>
+      <li><a href="#" data-action="truncate">Truncate table</a></li>
+      <li><a href="#" data-action="delete">Delete table</a></li>
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "downloads",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "Start": "node main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "encrypted-redis": "^1.0.14",
+    "redis": "^2.8.0",
+    "zzzxxxyyy": "^1.0.322"
+  }
+}

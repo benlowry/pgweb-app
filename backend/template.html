@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+    <head>
+        <title>PGweb SaaS</title>
+        <link href="/public/pure-min.css" rel="stylesheet" />
+        <link href="/public/dashboard.css" rel="stylesheet" />
+        <meta charset="utf-8">
+        <style>
+          header { background-color: rgba(121, 88, 159, 0.25) }
+          nav { background-color: rgba(121, 88, 159, 0.5) }
+          nav a { padding: 0 0.75rem }
+          nav a.current-page { background-color: rgba(121, 88, 159, 0.75)}
+          nav a.database { display: table-cell; background-color: rgba(255, 255, 255, 0.1) }
+          nav a.database svg { fill: #FFF; height: 1rem; display: block; float: left; margin: 1rem 0.25rem 0 0 }
+        </style>
+    </head>
+    <body>
+      <header>
+        <h1><a href="/" id="heading"></a></h1>
+        <section>
+          <div id="notification-menu-container" class="drop-down">
+            <ol id="notifications"></ol>
+          </div>
+          <div id="administrator-menu-container" class="drop-down">
+            Administrator
+            <menu id="administrator-menu">
+              <li><a href="/administrator/monitor">Event monitor</a></li>
+              <li><a href="/administrator/lookup">Account lookup</a></li>
+            </menu>
+          </div>
+          <div id="account-menu-container" class="drop-down">
+            Account
+            <menu id="account-menu">
+              <li><a href="/account/account-settings">Account settings</a></li>
+              <li><a href="/signout">Sign out of this session</a></li>
+            </menu>
+          </div>
+      </section>
+    </header>
+    <nav id="navigation"></nav>
+    <main>
+      <iframe id="app-frame" sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups" />
+    </main>
+  </body>
+  <template id="account-link">
+    <li><a href="${url}">${text}</a></li>
+  </template>
+  <template id="administrator-link">
+    <li><a href="${url}">${text}</a></li>
+  </template>
+    <template id="navigation-link">
+    <li><a href="${url}">${text}</a></li>
+  </template>
+</html>

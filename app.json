@@ -1,0 +1,25 @@
+{
+  "title": "PGWeb Hosted",
+  "navbars": {
+    "default": [
+      { "url": "/home", "text": "Home" }
+    ]
+  }, 
+  "routes": {
+    "/home": { "id": "home", "route": "@home" },
+    "/static/css/*": { },
+    "/static/fonts/*": {  },
+    "/static/img/*": {  },
+    "/static/js/*": {  },
+    "/pgweb?": { "route": "@pgweb" },
+    "/pgweb/rows?": { "route": "@pgweb" },
+    "/pgweb/structures?": { "route": "@pgweb" },
+    "/pgweb/indexes?": { "route": "@pgweb" },
+    "/pgweb/constraints?": { "route": "@pgweb" },
+    "/pgweb/query?": { "route": "@pgweb" },
+    "/pgweb/history?": { "route": "@pgweb" },
+    "/pgweb/activity?": { "route": "@pgweb" },
+    "/pgweb/connection?": { "route": "@pgweb" },
+    "/*": { "handler": "@pgweb", "template": "false" }
+  }
+}
