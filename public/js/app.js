@@ -44,11 +44,11 @@ function getSessionId() {
 }
 
 function setRowsLimit(num) {
-  localStorage.setItem("rows_limit", num);
+  localStorage.setItem("rows_limit-" + window.bookmarkid, num);
 }
 
 function getRowsLimit() {
-  return parseInt(localStorage.getItem("rows_limit") || default_rows_limit);
+  return parseInt(localStorage.getItem("rows_limit-" + window.bookmarkid) || default_rows_limit);
 }
 
 function getPaginationOffset() {
@@ -72,13 +72,11 @@ function apiCall(method, path, params, cb) {
   if (!window.bookmarkid) {
     return
   }
-  params = params || {}
-  params.bookmarkid = window.bookmarkid
   var timeout = 300000; // 5 mins is enough
-
+  console.log('apiCall', method, path, params, window.bookmarkid)
   $.ajax({
     timeout: timeout,
-    url: "/api" + path,
+    url: "/api" + path + '?bookmarkid=' + window.bookmarkid,
     method: method,
     cache: false,
     data: params,
@@ -695,11 +693,11 @@ function initEditor() {
     }
 
     writeQueryTimeout = setTimeout(function() {
-      localStorage.setItem("pgweb_query", editor.getValue());
+      localStorage.setItem("pgweb_query-" + window.bookmarkid, editor.getValue());
     }, 1000);
   });
 
-  var query = localStorage.getItem("pgweb_query");
+  var query = localStorage.getItem("pgweb_query-" + window.bookmarkid);
   if (query && query.length > 0) {
     editor.setValue(query);
     editor.clearSelection();
@@ -1204,7 +1202,7 @@ $(document).ready(function() {
 
       switch (window.page) {
         case 'pgweb':
-          return showQueryPanel()
+        return showQueryPanel()
         case 'rows':
           return showTableContent()
         case 'structures':

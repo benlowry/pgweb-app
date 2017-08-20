@@ -38,81 +38,16 @@ async function renderPage (req, res) {
     req.data = {pgweb, bookmark}
     return setTimeout(() => {
       req.url = '/'
-      return proxyRequest(req, res)
+      const port = pgweb.spawnargs[pgweb.spawnargs.length - 1]
+      return passRequest(req, res, port)
     }, 2000)
   }
   req.data = {pgweb, bookmark}
-  return proxyRequest(req, res)
-}
-
-function proxyRequest (req, res) {
-  console.log(req.url, req.method, req.body)
-  // proxy the pgweb instance
   const port = req.data.pgweb.spawnargs[req.data.pgweb.spawnargs.length - 1]
-  // GET requests
-  if (!req.bodyRaw) {
-    const getOptions = {
-      host: 'localhost',
-      port: port,
-      method: 'GET',
-      path: req.urlPath === '/pgweb' ? '/' : req.url
-    }
-    const getRequest = http.request(getOptions, (getResponse) => {
-      let chunks = ''
-      getResponse.on('data', (chunk) => {
-        chunks += chunk
-      })
-      getResponse.on('end', () => {
-        if (getRequest.path.indexOf('/api/') > -1) {
-          res.setHeader('content-type', 'application/json')
-          res.statusCode = getRequest.statusCode || 200
-          return res.end(chunks)
-        }
-        console.log('serving html', req.url, req.route)
-        const doc = Dashboard.HTML.parse(req.route.pageHTML)
-        doc.renderTemplate(req.data.bookmark, 'navbar-html-template', 'navbar-template')
-        preSelectPageContent(req, doc)
-        return Dashboard.Response.end(req, res, doc)
-      })
-    })
-    getRequest.on('error', () => {
-      res.statusCode = 500
-      res.end()
-    })
-    return getRequest.end()
+  if (req.url.startsWith('/pgweb/')) {
+    req.url = '/?' + req.url.split('?')[1]
   }
-  // POST requests
-  const postBody = req.bodyRaw
-  const postOptions = {
-    host: 'localhost',
-    port: port,
-    path: req.urlPath === '/pgweb' ? '/' : req.url,
-    method: 'POST',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'referer': `http://localhost:${port}/pgweb/`,
-      'content-length': postBody.length
-    }
-  }
-  const postRequest = http.request(postOptions, (postResponse) => {
-    let chunks = ''
-    postResponse.on('data', (chunk) => {
-      chunks += chunk
-    })
-    return postResponse.on('end', () => {
-      if (postRequest.path.indexOf('/api/') > -1) {
-        res.setHeader('content-type', 'application/json')
-        res.statusCode = postResponse.statusCode || 200
-        return res.end(chunks)
-      } else {
-        const doc = Dashboard.HTML.parse(chunks)
-        preSelectPageContent(req, doc)
-        return Dashboard.Response.end(req, res, doc)
-      }
-    })
-  })
-  postRequest.write(postBody)
-  return postRequest.end()
+  return passRequest(req, res, port)
 }
 
 function loadBookmark (userid, bookmarkid, callback) {
@@ -126,18 +61,76 @@ function loadBookmark (userid, bookmarkid, callback) {
 
 function preSelectPageContent (req, doc) {
   switch (req.urlPath) {
-    case '/pgweb':
-    case '/pgweb/query':
-      return
     case '/pgweb/rows':
     case '/pgweb/structures':
     case '/pgweb/indexes':
     case '/pgweb/constraints':
     case '/pgweb/history':
     case '/pgweb/activity':
-    case 'pgweb/connection':
+    case '/pgweb/connection':
       const input = doc.getElementById('input')
       input.attr = input.attr || {}
       input.attr.style = 'display: none'
   }
+}
+
+function passRequest (req, res, port) {
+  const requestOptions = {
+    host: 'localhost',
+    port: port,
+    path: req.url,
+    method: req.method,
+    headers: {
+      'x-sessionid': req.sessionid
+    }
+  }
+  for (const header in req.headers) {
+    requestOptions.headers[header] = req.headers[header]
+  }
+  if (requestOptions.method === 'post' && req.bodyRaw) {
+    requestOptions.headers['content-length'] = req.bodyRaw.length
+    requestOptions.headers['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  }
+  const proxyRequest = http.request(requestOptions)
+  proxyRequest.addListener('response', (proxyResponse) => {
+    const chunks = []
+    proxyResponse.addListener('data', (chunk) => {
+      chunks.push(chunk)
+    })
+    return proxyResponse.addListener('end', () => {
+      if (proxyResponse.statusCode === 404) {
+        return Dashboard.Response.throw404(req, res)
+      }
+      res.statusCode = proxyResponse.statusCode
+      res.headers = proxyResponse.headers
+      if (proxyResponse.statusCode === 200) {
+        console.log(Buffer.concat(chunks).toString('utf-8'))
+        const contentType = proxyResponse.headers['content-type'] || 'text/html'
+        if (contentType.split(';')[0] === 'text/html') {
+          // note: discarding pgweb's output due to modifications
+          const doc = Dashboard.HTML.parse(req.route.pageHTML)
+          doc.renderTemplate(req.data.bookmark, 'navbar-html-template', 'navbar-template')
+          preSelectPageContent(req, doc)
+          return Dashboard.Response.end(req, res, doc)
+        }
+      }
+      if (chunks && chunks.length) {
+        if (requestOptions.path.indexOf('/api/') > -1) {
+          res.setHeader('content-type', 'application/json')
+        }
+        return res.end(Buffer.concat(chunks))
+      }
+      return res.end()
+    })
+  })
+  proxyRequest.on('error', () => {
+    return Dashboard.Response.throw500(req, res)
+  })
+  req.addListener('error', () => {
+    return Dashboard.Response.throw500(req, res)
+  })
+  if (req.bodyRaw) {
+    proxyRequest.write(req.bodyRaw)
+  }
+  return proxyRequest.end()
 }
