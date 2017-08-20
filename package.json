@@ -13,5 +13,9 @@
     "encrypted-redis": "^1.0.14",
     "redis": "^2.8.0",
     "zzzxxxyyy": "^1.0.330"
+  },
+  "engines": {
+    "node": "8.0.0",
+    "npm": "5.0.0"
   }
 }
