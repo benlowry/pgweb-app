@@ -12,6 +12,6 @@
   "dependencies": {
     "encrypted-redis": "^1.0.14",
     "redis": "^2.8.0",
-    "zzzxxxyyy": "^1.0.326"
+    "zzzxxxyyy": "^1.0.330"
   }
 }
