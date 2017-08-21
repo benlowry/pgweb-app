@@ -55,9 +55,6 @@ async function submitForm (req, res) {
       return renderPage(req, res, `missing-${property}-error-template`)
     }
   }
-  if (req.body.save !== 'true') {
-    return Pgweb.renderPage(req, res)
-  }
   if (!req.body.name) {
     return renderPage(req, res, 'missing-bookmark-name-error-template')
   }
