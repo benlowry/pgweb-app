@@ -1,10 +1,12 @@
 const Dashboard = require('zzzxxxyyy')
-const Pgweb = require('./pgweb.js')
 const util = require('util')
 
 module.exports = {
   get: renderPage,
-  post: submitForm
+  post: submitForm,
+  listBookmarks,
+  loadBookmark,
+  deleteStaleBookmark
 }
 
 async function renderPage (req, res, messageTemplate) {
@@ -78,15 +80,15 @@ async function submitForm (req, res) {
 
 async function listBookmarks (userid) {
   const lrangeAsync = util.promisify(Dashboard.Redis.lrange)
-  const deleteBookmarkAsync = util.promisify(deleteBookmark)
+  const deleteStaleAsync = util.promisify(deleteStaleBookmark)
   const loadBookmarkAsync = util.promisify(loadBookmark)
   const bookmarkids = await lrangeAsync(`bookmarks:${userid}`, 0, -1)
+  console.log(bookmarkids)
   const bookmarks = []
   for (const bookmarkid of bookmarkids) {
-    console.log('bookmarkid', bookmarkid)
     const bookmark = await loadBookmarkAsync(userid, bookmarkid)
     if (!bookmark) {
-      await deleteBookmarkAsync(`bookmarks:${userid}`, bookmarkid)
+      await deleteStaleAsync(`bookmarks:${userid}`, bookmarkid)
     } else {
       bookmarks.push(bookmark)
     }
@@ -106,7 +108,7 @@ function loadBookmark (userid, bookmarkid, callback) {
   })
 }
 
-function deleteBookmark (userid, bookmarkid, callback) {
+function deleteStaleBookmark (userid, bookmarkid, callback) {
   return Dashboard.Redis.lrem(`bookmarks:${userid}`, 0, bookmarkid, () => {
     return callback()
   })

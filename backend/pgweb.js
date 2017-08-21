@@ -39,6 +39,7 @@ async function renderPage (req, res) {
     return setTimeout(() => {
       req.url = '/'
       const port = pgweb.spawnargs[pgweb.spawnargs.length - 1]
+      console.log('passing request', port)
       return passRequest(req, res, port)
     }, 2000)
   }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <link href="/public/pure-min.css" rel="stylesheet" />
+  <link href="/public/content.css" rel="stylesheet" />
+  <style>
+    .pure-g h1 { font-size: 1.25rem }
+    .bookmarks { margin: 0 0 1rem 0; padding: 0 }
+    .bookmarks li { list-style-type: none; margin: 0.5rem 0; padding: 0.5rem 0; border-bottom: 1px solid #EEE }
+    .bookmarks li:last-child { padding-bottom: 0; margin-bottom: 0; border-bottom: none }
+    .delete { color: #FFF; background-color: #900;
+      border-radius: 0.25rem; border: 1px solid #900; padding: 0.5rem; font-size: 1rem  }
+    .delete:hover { color: #FFF; background-color: #F00 }
+  </style>
+  <template id="navbar-template">
+    <a href="/home">Bookmarks</a>
+    <a href="/delete-bookmarks">Delete bookmarks</a>
+  </template>
+</head>
+  <body>
+    <h1>Delete bookmarks</h1>
+    <form class="pure-form" method="POST">
+      <input type="hidden" name="confirm" value="true" />
+      <ul class="bookmarks" id="bookmarks-list"></ul>
+      <div class="pure-controls">
+        <button class="delete">Delete selected</button>
+      </div>
+    </form>
+  </body>
+  <template id="no-selected-error-template">
+    <div class="error-message">No bookmarks were selected to delete.</div>
+  </template>
+  <template id="submit-error-template">
+    <div class="error-message">An error occurred deleting the bookmark(s).</div>
+  </template>
+  <template id="submit-success-template">
+    <div class="success-message">The selected bookmark(s) have been deleted.</div>
+  </template>
+  <template id="bookmark-item-template">
+    <li class="pure-control-group">
+      <label class="pure-checkbox">
+        <input type="checkbox" name="bookmark${bookmarkid}" value="true" />
+        ${name}
+      </label>
+    </li>
+  </template>
+</html>

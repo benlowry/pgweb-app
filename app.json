@@ -2,11 +2,12 @@
   "title": "PGWeb Hosted",
   "navbars": {
     "default": [
-      { "url": "/home", "text": "Home" }
+      { "url": "/home", "text": "Bookmarks" }
     ]
   }, 
   "routes": {
     "/home": { "id": "home", "route": "@home" },
+    "/delete-bookmarks": { "route": "@delete-bookmarks" },
     "/pgweb?": { "route": "@pgweb" },
     "/pgweb/*?": { "route": "@pgweb" },
     "/*": { "handler": "@pgweb", "template": "false" }
