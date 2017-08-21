@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Home</title>
-  <link href="/public/pure-min.css" rel="stylesheet" />
-  <link href="/public/content.css" rel="stylesheet" />
-  <style>
-    .pure-g h1 { font-size: 1.25rem }
-    .bookmarks { margin: 0; padding: 0 }
-    .bookmarks li { list-style-type: none; display: table-cell; text-align: center; padding: 0 1rem 1rem 0; margin: 0 }
-    .bookmarks img { display: block; width: 6rem; height: 6rem; margin-bottom: 0.5rem }
-    .bookmarks a { display: block; text-decoration: none; color: #333; font-size: 0.9rem; 
-      background-color: #F5F5F5; margin: 0; padding: 1rem; border-radius: 0.5rem }
-    .bookmarks a:hover { background-color: #EEE }
-    .pure-control-group input[type="text"],
-    .pure-control-group input[type="number"],
-    .pure-control-group input[type="password"] { display: inline-block; background-color: #FFF }
-    .pure-controls button { margin-right: 1rem }
-    .pure-button-group a.pure-button {font-size: 0.8rem; text-transform: uppercase }
-    .pure-button-group a.pure-button-primary { background-color: rgb(121, 88, 169); color: #FFF }
-    .pure-button-group a.pure-button-primary:hover { background-color: rgb(121, 88, 169); color: #FFF }
-    .pure-form { margin-bottom: 0 }
-    .pure-form .pure-button { background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25) 100%, rgba(0, 0, 0, 0)) } 
-    .pure-form .pure-button-primary { background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5) 100%, rgba(0, 0, 0, .1)); background-color: rgba(121, 88, 159, 1) } 
-    .block { background-color: #F5F5F5; border-radius: 1rem; padding: 1rem }
-    input[type="number"] { width: 6rem }
-    input[type="text"],
-    input[type="url"] { max-width: 100% }
-    .delete { color: #900; font-weight: bold; text-decoration: none; background-color: #F5F5F5;
-      border-radius: 0.25rem; border: 1px solid #900; padding: 0.5rem; font-size: 0.8rem  }
-    .delete:hover { color: #FFF; background-color: #900 }
-    .save { color: rgb(121, 88, 159); background-color: #F5F5F5;
-      border-radius: 0.25rem; border: 1px solid rgb(121, 88, 159); padding: 0.5rem; font-size: 1rem  }
-    .save:hover { color: #FFF; background-color: rgb(121, 88, 159) }
-</style>
+  <head>
+    <title>Home</title>
+    <link href="/public/pure-min.css" rel="stylesheet" />
+    <link href="/public/content.css" rel="stylesheet" />
+    <style>
+      .pure-g h1 { font-size: 1.25rem }
+      .bookmarks { margin: 0; padding: 0 }
+      .bookmarks li { list-style-type: none; display: table-cell; text-align: center; padding: 0 1rem 1rem 0; margin: 0 }
+      .bookmarks img { display: block; width: 6rem; height: 6rem; margin-bottom: 0.5rem }
+      .bookmarks a { display: block; text-decoration: none; color: #333; font-size: 0.9rem; 
+        background-color: #F5F5F5; margin: 0; padding: 1rem; border-radius: 0.5rem }
+      .bookmarks a:hover { background-color: #EEE }
+      .pure-control-group input[type="text"],
+      .pure-control-group input[type="number"],
+      .pure-control-group input[type="password"] { display: inline-block; background-color: #FFF }
+      .pure-controls button { margin-right: 1rem }
+      .pure-button-group a.pure-button {font-size: 0.8rem; text-transform: uppercase }
+      .pure-button-group a.pure-button-primary { background-color: rgb(121, 88, 169); color: #FFF }
+      .pure-button-group a.pure-button-primary:hover { background-color: rgb(121, 88, 169); color: #FFF }
+      .pure-form { margin-bottom: 0 }
+      .pure-form .pure-button { background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25) 100%, rgba(0, 0, 0, 0)) } 
+      .pure-form .pure-button-primary { background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5) 100%, rgba(0, 0, 0, .1)); background-color: rgba(121, 88, 159, 1) } 
+      .block { background-color: #F5F5F5; border-radius: 1rem; padding: 1rem }
+      input[type="number"] { width: 6rem }
+      input[type="text"],
+      input[type="url"] { max-width: 100% }
+      .delete { color: #900; font-weight: bold; text-decoration: none; background-color: #F5F5F5;
+        border-radius: 0.25rem; border: 1px solid #900; padding: 0.5rem; font-size: 0.8rem  }
+      .delete:hover { color: #FFF; background-color: #900 }
+      .save { color: rgb(121, 88, 159); background-color: #F5F5F5;
+        border-radius: 0.25rem; border: 1px solid rgb(121, 88, 159); padding: 0.5rem; font-size: 1rem  }
+      .save:hover { color: #FFF; background-color: rgb(121, 88, 159) }
+  </style>
   <script>
     var links, forms, selected
     window.onload = function() {

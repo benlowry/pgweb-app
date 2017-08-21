@@ -6,6 +6,7 @@
     ]
   }, 
   "routes": {
+    "/": { "id": "index", "page": "@index", "template": false, "guest": true },
     "/home": { "id": "home", "route": "@home" },
     "/delete-bookmarks": { "route": "@delete-bookmarks" },
     "/pgweb?": { "route": "@pgweb" },
