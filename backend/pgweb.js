@@ -31,7 +31,7 @@ async function renderPage (req, res) {
       launchParams.push(`--${property}`, bookmark[property])
     }
     launchParams.push('--listen', processPort++)
-    const pgwebPath = path.join(`${__dirname}/..`, 'pgweb_darwin_amd64')
+    const pgwebPath = path.join(`${__dirname}/..`, process.env.PGWEB_EXECUTABLE || 'pgweb_darwin_amd64')
     pgweb = processes[req.query.bookmarkid] = childProcess.execFile(pgwebPath, launchParams)
     // let it start
     console.log('start and wait')
