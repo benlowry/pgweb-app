@@ -1172,18 +1172,12 @@ $(document).ready(function() {
   if (window.bookmarkid.indexOf('&') > -1) {
     window.bookmarkid = window.bookmarkid.substring(0, window.bookmarkid.indexOf('&'))
   }
-  console.log('bookmarkid', window.bookmarkid)
   window.page = url.split('/').pop()
-  console.log('window.onload', window.page, url)
-
   initEditor()
   addShortcutTooltips()
 
   var sessionObject = sessionStorage.getItem('cacheObject22223')
-  console.log('sessionObject', sessionObject)
   currentObject = sessionObject ? JSON.parse(sessionObject) : null
-  console.log('currentObject', currentObject)
-
   return apiCall('get', '/connection', {}, function (resp) {
     if (resp.error) {
       connected = false
