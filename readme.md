@@ -4,21 +4,21 @@ with dashboard.
 
 ## How it works
 1) Users save connection information as bookmarks
-2) Opening a bookmark starts a copy of pgweb bound to their connection
+2) Opening a bookmark starts a copy of pgweb bound to that connection
 3) Proxy requests to their pgweb process
 
-### Notes:
-1) /static/ directory assets moved to /public/ and remapped in index.html
+### Changes:
+1) /static/ contents copied to /public/ and remapped in index.html
 3) index.html modified to include navbar template for UserAppStore
-4) app.js modified to store last-selected table etc in sessionStorage
-5) app.js modified to use /api and append bookmarkid=X to apiCall() requests
-6) app.js modified to open to eg query or rows or indexes based on URL
+4) index.html modified to remove connection form and navigation 
+5) app.js modified to store last-selected table etc in sessionStorage
+6) app.js modified to use /api and append bookmarkid=X to apiCall() requests
+7) app.js modified to open to eg query or rows or indexes based on URL
 
 ## Demonstration 1
-This is running as a standalone app, in this case users would register and 
-pay and etc all on your own SaaS website.  You will need to register to
-use this example, or sign in as "test" with password "testtest" to explore
-a preconfigured database:
+This is running as a standalone web app, users register and pay and etc all 
+on your own SaaS website.  Sign in as "test" with password "testtest" for
+an account with a preconfigured database:
 
         https://secure-gorge-46054.herokuapp.com/
 
@@ -32,7 +32,7 @@ used because the account, subscriptions etc are in UserAppStore.
 You will need to register to use this example.  After signing in browse to
 the App Store, locate pgweb and install it to your dashboard:
 
-        https://userappstore.com/
+        https://userappstore.com/ 
 
 ## Requirements
 The dashboard software requires NodeJS and Redis.  For convenience the 
@@ -54,26 +54,34 @@ Clone the git repository:
 To run as an independent app you need to configure these ENV variables:
 
     UUID_ENCODING_CHARACTERS="abcde..." (encodes sequential ids to short url type strings)
-    BCRYPT_FIXED_SALT: "" (see generate notes below)
-    BCRYPT_WORKLOAD_FACTOR: 4
+    BCRYPT_FIXED_SALT: "" (see notes below)
     MINIMUM_PASSWORD_LENGTH: 5
     MINIMUM_USERNAME_LENGTH: 5
     MINIMUM_TOKEN_LENGTH: 5
+    REDIS_URL: "redis://localhost:6379"
 
 ## Run as a UserAppStore app
 To run as an AppStore app you need to configure this ENV variable:
 
     USERAPPSTORE="https://userappstore.com"
+    UUID_ENCODING_CHARACTERS="abcde..." (encodes sequential ids to short url type strings)
+    BCRYPT_FIXED_SALT: "$...." (see notes below)
+    BCRYPT_WORKLOAD_FACTOR: 10 (see notes below)
+    REDIS_URL: "redis://localhost:6379"
 
 ### Generating a salt
-Fixed-salts return the same hash every time, this is useful for usernames and
-some other fields where you want to retrieve by value or ensure non-duplicates.  
+Fixed-salts return the same hash every time, for usernames and some other fields where the 
+hashed value is a surrogate for the real value and still used for comparisons, uniqueness etc.  
 
-Passwords and wherever possible a random salt is used each time.
+Because the hashed data is used a low work factor should be used so the operation completes quickly.
 
     $ node
-    $ var bcrypt = require('node-bcrypt')
-    $ bcrypt.genSaltSync(bcryptWorkFactor);
+    $ var bcrypt = require('bcrypt-node')
+    $ bcrypt.genSaltSync(1);
+
+The BCRYPT_WORKLOAD_FACTOR is used when hashing with random salts, for passwords
+and generally where the hashed value is not used for anything.  It should be 10+ to ensure
+anyone trying to reverse it requires too much computing power.
 
 ### Encrypting Redis data in production
 You can encrypt your Redis database using a combination of AES-256 for data and 
@@ -93,8 +101,8 @@ in your ENV variable:
     UUID_ENCODING_CHARACTERS="z8dFg..."
 
 A single Redis counter is used as the source of ID integers.  Many parts of the 
-dashboard generate IDs so the sequence might be #1 = userid #2 = sessionid. The
-sequence can be made fuzzier with ENV variables:
+dashboard generate IDs so the first might be for a userid, the second a sessionid and
+the third a recovery token. The sequence can be made fuzzier with ENV variables:
 
     ID_SEED: 0
     ID_MINIMUM_INCREASE: 1

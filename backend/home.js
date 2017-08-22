@@ -18,6 +18,11 @@ async function renderPage (req, res, messageTemplate) {
   const bookmarks = await listBookmarks(req.userid)
   if (bookmarks && bookmarks.length) {
     doc.renderList(bookmarks, 'bookmark-item-template', 'bookmarks-list')
+    doc.removeElementById('no-bookmarks')
+  } else {
+    doc.removeElementsById(['delete-bookmarks', 'create-title'])
+    const createForms = doc.getElementById('create-forms')
+    createForms.classList.add('no-bookmarks')
   }
   return Dashboard.Response.end(req, res, doc)
 }
@@ -83,7 +88,6 @@ async function listBookmarks (userid) {
   const deleteStaleAsync = util.promisify(deleteStaleBookmark)
   const loadBookmarkAsync = util.promisify(loadBookmark)
   const bookmarkids = await lrangeAsync(`bookmarks:${userid}`, 0, -1)
-  console.log(bookmarkids)
   const bookmarks = []
   for (const bookmarkid of bookmarkids) {
     const bookmark = await loadBookmarkAsync(userid, bookmarkid)

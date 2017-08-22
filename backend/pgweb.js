@@ -4,11 +4,24 @@ const http = require('http')
 const path = require('path')
 const util = require('util')
 const processes = {}
+const processList = []
 let processPort = 3001
+setInterval(killIdleProcesses, 60)
 
 module.exports = {
   get: renderPage,
   post: renderPage
+}
+
+function killIdleProcesses () {
+  const now = Dashboard.Timestamp.now
+  for (const pgweb of processList) {
+    if (now - pgweb.lastRequest > 240) {
+      pgweb.kill()
+      processList.splice(processList.indexOf(pgweb), 1)
+      delete (processes[pgweb.bookmarkid])
+    }
+  }
 }
 
 async function renderPage (req, res) {
@@ -33,6 +46,8 @@ async function renderPage (req, res) {
     launchParams.push('--listen', processPort++)
     const pgwebPath = path.join(`${__dirname}/..`, process.env.PGWEB_EXECUTABLE || 'pgweb_darwin_amd64')
     pgweb = processes[req.query.bookmarkid] = childProcess.execFile(pgwebPath, launchParams)
+    pgweb.bookmarkid = req.query.bookmarkid
+    processList.push(pgweb)
     // let it start
     console.log('start and wait')
     req.data = {pgweb, bookmark}
@@ -48,6 +63,7 @@ async function renderPage (req, res) {
   if (req.url.startsWith('/pgweb/')) {
     req.url = '/?' + req.url.split('?')[1]
   }
+  pgweb.lastRequest = Dashboard.Timestamp.now
   return passRequest(req, res, port)
 }
 
