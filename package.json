@@ -12,7 +12,7 @@
   "dependencies": {
     "encrypted-redis": "^1.0.14",
     "redis": "^2.8.0",
-    "zzzxxxyyy": "^1.0.335"
+    "zzzxxxyyy": "^1.0.336"
   },
   "engines": {
     "node": "8.1.4",
