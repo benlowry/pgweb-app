@@ -5,6 +5,12 @@
       { "url": "/home", "text": "Bookmarks" }
     ]
   }, 
+  "header": {
+    "backgroundColor": "rgba(121, 88, 159, 0.25)"
+  },
+  "navbar": {
+    "backgroundColor": "rgba(121,88,159, 0.5)"
+  },
   "routes": {
     "/app.json": { "id": "app.json" },
     "/": { "id": "index", "disabled": true },
