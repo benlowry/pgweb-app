@@ -1,5 +1,5 @@
 {
-  "title": "PGWeb Hosted",
+  "title": "PGWeb SaaS",
   "navbars": {
     "default": [
       { "url": "/home", "text": "Bookmarks" }
@@ -11,6 +11,49 @@
     "/delete-bookmarks": { "route": "@delete-bookmarks" },
     "/pgweb?": { "route": "@pgweb" },
     "/pgweb/*?": { "route": "@pgweb" },
-    "*": { "handler": "@pgweb", "template": "false" }
+    "/*": { "handler": "@pgweb", "template": "false" }
+  },
+
+
+
+  
+  "name": "pgweb-saas-heroku",
+  "description": "A SaaS / multi-user frontend for pgweb.",
+  "website": "https://github.com/userappstore/pgweb-saas",
+  "repository": "https://github.com/userappstore/pgweb-saas",
+  "logo": "https://raw.githubusercontent.com/userappstore/pgweb-saas/master/icon.png",
+  "success_url": "/",
+  "addons": [
+    "heroku-redis"
+  ],
+  "env": {
+    "UUID_ENCODING_CHARACTERS": {
+      "description": "Letters and numbers to use when creating IDs",
+      "value": "a1B2c3..."
+    },
+    "BCRYPT_FIXED_SALT": {
+      "description": "A fixed salt for bcrypt-hashing certain data",
+      "value": "$2a$10..."
+    },
+    "MINIMUM_PASSWORD_LENGTH": {
+      "description": "Minimum password length",
+      "value": "8"
+    },
+    "MINIMUM_USERNAME_LENGTH": {
+      "description": "Minimum username length",
+      "value": "8"
+    },
+    "MINIMUM_TOKEN_LENGTH": {
+      "description": "Minimum token length",
+      "value": "8"
+    },
+    "REDIS_ENCRYPTION_KEY": {
+      "description": "A secret to encrypt Redis data",
+      "generator": "secret"
+    },
+    "REDIS_KEY_HASH": {
+      "description": "Another secret to encrypt Redis data",
+      "generator": "secret"
+    }
   }
 }
