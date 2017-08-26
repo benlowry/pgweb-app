@@ -6,11 +6,11 @@
     ]
   }, 
   "routes": {
-    "/": { "id": "index", "page": "@index", "template": false, "guest": true },
+    "/app.json": { "id": "app.json" },
     "/home": { "id": "home", "route": "@home" },
     "/delete-bookmarks": { "route": "@delete-bookmarks" },
     "/pgweb?": { "route": "@pgweb" },
     "/pgweb/*?": { "route": "@pgweb" },
-    "/*": { "handler": "@pgweb", "template": "false" }
+    "*": { "handler": "@pgweb", "template": "false" }
   }
 }
