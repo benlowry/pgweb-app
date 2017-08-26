@@ -8,6 +8,8 @@
   "routes": {
     "/app.json": { "id": "app.json" },
     "/": { "id": "index" },
+    "/signin": { "id": "signin" },
+    "/register": { },
     "/home": { "id": "home", "route": "@home" },
     "/delete-bookmarks": { "route": "@delete-bookmarks" },
     "/*": { "handler": "@pgweb", "template": "false" }
