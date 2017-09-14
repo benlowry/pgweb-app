@@ -1,5 +1,8 @@
 {
   "title": "PGWeb SaaS",
+  "allow": {
+    "userappstore.com": true
+  },
   "navbars": {
     "default": [
       { "url": "/home", "text": "Bookmarks" }
