@@ -10,6 +10,7 @@ module.exports = {
 }
 
 async function renderPage (req, res, messageTemplate) {
+  console.log('renderPage', req.userid, req.route)
   const sessionHTML = req.route.pageHTML.replace('$' + '{sessionid}', req.sessionid)
   const doc = Dashboard.HTML.parse(sessionHTML, __dirname)
   if (messageTemplate) {
