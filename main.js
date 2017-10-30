@@ -11,13 +11,18 @@ const util = require('util')
 const port = process.env.PORT || 3000
 http.createServer(receiveRequest).listen(port)
 
+const appjson = fs.readFileSync('./app.json').split('${SERVER_ADDRESS}').join(process.env.SERVER_ADDRESS)
+
 async function receiveRequest (req, res) {
-  console.log('[request]', req.url)
   res.statusCode = 200
   req.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   req.userAgent = req.headers['user-agent'] || ''
   req.query = url.parse(req.url, true).query
   req.urlPath = req.url.split('?')[0]
+  if (req.urlPath === '/app.json') {
+    res.setHeader('content-type', 'application/json')
+    return res.end(appjson)
+  }
   req.extension = req.urlPath.indexOf('.') > -1 ? req.urlPath.split('.').pop().toLowerCase() : null
   if (req.urlPath.startsWith('/public/')) {
     return StaticFile.get(req, res)
