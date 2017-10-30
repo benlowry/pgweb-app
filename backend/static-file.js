@@ -1,9 +1,20 @@
-const Config = require('../core/config.js')
 const fs = require('fs')
 const path = require('path')
-const Proxy = require('../core/proxy.js')
-const Response = require('../core/response.js')
 const fileCache = {}
+const mimeTypes = {
+  js: 'text/javascript',
+  css: 'text/css',
+  txt: 'text/plain',
+  html: 'text/html',
+  jpg: 'image/jpeg',
+  png: 'image/png',
+  ico: 'image/x-icon',
+  svg: 'image/svg+xml',
+  eot: 'application/vnd.ms-fontobject',
+  ttf: 'application/font-sfnt',
+  woff: 'application/font-woff',
+  otf: 'application/x-font-opentype'
+}
 
 module.exports = {get}
 
@@ -11,22 +22,13 @@ function get (req, res) {
   if (!req.urlPath.indexOf('/public/') === 0) {
     throw new Error('Invalid file')
   }
-  const blob = loadFile(req.urlPath)
-  if (blob) {
-    return Response.end(req, res, null, blob)
+  const filePath = path.join(__dirname, '../public') + req.urlPath
+  const cached = fileCache[filePath]
+  if (cached) {
+    res.setHeader('content-type', mimeTypes[req.extension])
+    res.setHeader('content-length', cached.length)
+    return res.end(cached, 'binary')
   }
-  if (process.env.SERVER_ADDRESS) {
-    return Proxy.pass(req, res)
-  }
-  return Response.throw404(req, res)
-}
-
-function loadFile (urlPath) {
-  const unwound = Config.unwindPath(urlPath)
-  if (!unwound) {
-    return
-  }
-  const filePath = path.join(Config.getRoot(), unwound)
   if (!fs.existsSync(filePath)) {
     return
   }
@@ -34,6 +36,8 @@ function loadFile (urlPath) {
   if (stat.isDirectory()) {
     return
   }
-  const blob = fileCache[filePath] = fileCache[filePath] || fs.readFileSync(filePath)
-  return blob
+  const blob = fileCache[filePath] = fs.readFileSync(filePath)
+  res.setHeader('content-type', mimeTypes[req.extension])
+  res.setHeader('content-length', blob.length)
+  return res.end(blob, 'binary')
 }
