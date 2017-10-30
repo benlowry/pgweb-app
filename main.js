@@ -8,12 +8,8 @@ const StaticPage = require('./backend/static-page.js')
 const url = require('url')
 const util = require('util')
 
-module.exports = {
-  start: () => {
-    const port = process.env.PORT || 3000
-    http.createServer(receiveRequest).listen(port)
-  }
-}
+const port = process.env.PORT || 3000
+http.createServer(receiveRequest).listen(port)
 
 async function receiveRequest (req, res) {
   console.log('[request]', req.url)
