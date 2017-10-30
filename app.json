@@ -1,22 +1,16 @@
 {
   "title": "PGWeb SaaS",
-  "url": "${SERVER_ADDRESS}"
-  "icon": "/public/app.png",
+  "url": "${SERVER_ADDRESS}",
+  "icon": "${SERVER_ADDRESS}/public/app.png",
   "icons": [],
   "screenshots": [
-    "/public/screenshot1.jpg",
-    "/public/screenshot2.jpg",
-    "/public/screenshot3.jpg"
+    "${SERVER_ADDRESS}/public/screenshot1.jpg",
+    "${SERVER_ADDRESS}/public/screenshot2.jpg",
+    "${SERVER_ADDRESS}/public/screenshot3.jpg"
   ],
   "allow": {
-    "userappstore.com": true,
-    "localhost": true
+    "userappstore.com": true
   },
-  "navbars": {
-    "default": [
-      { "url": "/home", "text": "Bookmarks" }
-    ]
-  }, 
   "header": {
     "backgroundColor": "rgba(121, 88, 159, 0.25)"
   },
