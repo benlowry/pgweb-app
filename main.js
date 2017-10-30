@@ -11,7 +11,7 @@ const util = require('util')
 const port = process.env.PORT || 3000
 http.createServer(receiveRequest).listen(port)
 
-const appjson = fs.readFileSync('./app.json').split('${SERVER_ADDRESS}').join(process.env.SERVER_ADDRESS)
+const appjson = fs.readFileSync(`${__dirname}/app.json`).toString('utf-8').split('${SERVER_ADDRESS}').join(process.env.SERVER_ADDRESS)
 
 async function receiveRequest (req, res) {
   res.statusCode = 200
