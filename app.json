@@ -1,7 +1,9 @@
 {
   "title": "PGWeb SaaS",
+  "icon": "${SERVER_ADDRESS}/public/app.png",
   "allow": {
-    "userappstore.com": true
+    "userappstore.com": true,
+    "localhost": true
   },
   "navbars": {
     "default": [
@@ -13,14 +15,5 @@
   },
   "navbar": {
     "backgroundColor": "rgba(121,88,159, 0.5)"
-  },
-  "routes": {
-    "/app.json": { "id": "app.json" },
-    "/": { "id": "index", "disabled": true },
-    "/signin": { "id": "signin", "disabled": true },
-    "/register": { "disabled": true },
-    "/home": { "id": "home", "route": "@home" },
-    "/delete-bookmarks": { "route": "@delete-bookmarks" },
-    "/*": { "handler": "@pgweb", "template": "false" }
   }
 }
