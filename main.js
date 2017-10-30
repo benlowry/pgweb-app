@@ -2,8 +2,8 @@ const fs = require('fs')
 const http = require('http')
 const https = require('https')
 const path = require('path')
-const PublicFile = require('./core/public-file.js')
 const qs = require('querystring')
+const StaticFile = require('./core/static-file.js')
 const StaticPage = require('./core/static-page.js')
 const url = require('url')
 const util = require('util')
@@ -24,7 +24,7 @@ async function receiveRequest (req, res) {
   req.urlPath = req.url.split('?')[0]
   req.extension = req.urlPath.indexOf('.') > -1 ? req.urlPath.split('.').pop().toLowerCase() : null
   if (req.urlPath.startsWith('/public/')) {
-    return PublicFile.get(req, res)
+    return StaticFile.get(req, res)
   }
   if (req.urlPath.startsWith('/website/')) {
     return StaticPage.get(req, res)
