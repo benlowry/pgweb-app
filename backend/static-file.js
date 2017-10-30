@@ -22,7 +22,7 @@ function get (req, res) {
   if (!req.urlPath.indexOf('/public/') === 0) {
     throw new Error('Invalid file')
   }
-  const filePath = path.join(__dirname, '../public') + req.urlPath
+  const filePath = path.join(`${__dirname}/..`, 'public') + req.urlPath
   const cached = fileCache[filePath]
   if (cached) {
     res.setHeader('content-type', mimeTypes[req.extension])
@@ -30,11 +30,13 @@ function get (req, res) {
     return res.end(cached, 'binary')
   }
   if (!fs.existsSync(filePath)) {
-    return
+    res.statusCode = 404
+    return res.end()
   }
   const stat = fs.statSync(filePath)
   if (stat.isDirectory()) {
-    return
+    res.statusCode = 404
+    return res.end()
   }
   const blob = fileCache[filePath] = fs.readFileSync(filePath)
   res.setHeader('content-type', mimeTypes[req.extension])
