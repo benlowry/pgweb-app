@@ -22,8 +22,7 @@ function get (req, res) {
   if (!req.urlPath.startsWith('/public/')) {
     throw new Error('Invalid file')
   }
-  const filePath = path.join(`${__dirname}/..`, 'public') + req.urlPath
-  console.log(filePath)
+  const filePath = path.join(__dirname, '..') + req.urlPath
   const cached = fileCache[filePath]
   if (cached) {
     res.setHeader('content-type', mimeTypes[req.extension])
