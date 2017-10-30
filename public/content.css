@@ -1,0 +1,132 @@
+html, body { padding: 0; margin: 0; font-family: sans-serif }
+body { padding: 1rem }
+h1 { margin-top: 0; font-weight: 400; color: #036; font-size: 1.6rem }
+h2 { font-weight: 400; margin-top: 0; margin-bottom: 0.5rem; font-size: 1.2rem }
+h3 { font-weight: normal; margin-top: 0; margin-bottom: 0.5rem; font-size: 1rem }
+h1, 
+h2, 
+h3 { color: #036 }
+p, 
+form, 
+table { margin-bottom: 2rem }
+label { color: #369 }
+a, input, select, textarea, button { outline: 0 }
+input[type="submit"] { position: absolute; left: -10000px; top: -10000px; z-index: 100000 }
+
+/* pure overrides */
+.pure-form-aligned .pure-control-group label { width: 11rem; margin-right: 1rem }
+.pure-form-aligned .pure-controls { margin: 1.5rem 0 0 0 }
+@media (min-width: 480px) {
+  .pure-form-aligned .pure-controls { margin: 1.5rem 0 0 12rem }
+}
+.pure-table { width: 100%; border: none }
+.pure-table th { border: none; font-size: 0.8rem; text-transform: uppercase; color: rgba(00, 33, 66, 0.75); padding: 1rem }
+.pure-table tr th:first-of-type { border-top-left-radius: 0.25rem }
+.pure-table tr th:last-of-type { border-top-right-radius: 0.25rem }
+.pure-table td { border: none; font-family: monospace; font-size: 1rem; color: #666; padding: 1rem }
+.pure-table tr:last-of-type td { border-bottom: none }
+.pure-table-striped tr:nth-child(2n-1) td { background-color: #EFEFEF }
+.spaced-buttons .pure-button { margin: 0 1rem 1rem 0 }
+.pure-control-group { margin-bottom: 1rem}
+.pure-control-group label { text-transform: uppercase; font-size: 0.8rem; color: #666 }
+.pure-control-group textarea,
+.pure-control-group input[type="text"],
+.pure-control-group input[type="password"],
+.pure-control-group input[type="email"],
+.pure-control-group input[type="number"] { border: 1px solid #ccc; box-shadow: inset 0 0 3px #ccc; background-color: #EEE; border-radius: 0; color: #333; font-size: 0.9rem }
+.pure-control-group input:focus { border-color: #0078e7; box-shadow: inset 0 0 3px #FFF }
+.pure-checkbox input { margin-right: 0.5rem }
+.pure-checkbox label { font-size: 0.8rem; color: #333;  text-transform: none; font-size: 1rem }
+.pure-button { border-radius: 0.2rem; background-image: linear-gradient(rgba(255,255,255,0.25), rgba(255, 255,255, 0) 100%, rgba(0, 0, 0, .1)) }
+.pure-button:active { color: rgba(33,33,33,0.75)}
+.pure-button:focus { background-color: #036; color: rgba(255,255,255,0.5)}
+.pure-button-primary:active { color: rgba(255,255,255,0.75) }
+
+/* alerts */
+.message { font-weight: bold; font-size: 0.9rem; margin-bottom: 1rem }
+.success.message { color: #060 }
+.error.message { color: #900 }
+.info.message { color: #666 }
+
+/* entry forms for signing in, registration */
+.entry-form { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 20rem; padding: 1rem; text-align: center; box-shadow: 0 0 2rem #CCC }
+.entry-form h1 { font-size: 1.2rem }
+.entry-form ul { margin: 1rem 0 0 0 }
+.entry-form li { margin-top: 0.5rem }
+.entry-form a { color: #369; text-decoration: none }
+.entry-form fieldset { text-align: left }
+.entry-form input[type="text"], 
+.entry-form input[type="password"],
+.entry-form input[type="email"]{ width: 100%; border-color: #EEE; box-shadow: none; border-radius: 0 }
+
+/*
+ * event colors
+ */
+.graph .color1 { fill: #F00 }
+.graph .color2 { fill :#F90 }
+.graph .color3 { fill: #FC0 }
+.graph .color4 { fill: #93C }
+.graph .color5 { fill: #069 }
+.graph .color6 { fill: #090 }
+.graph .color7 { fill: #630 }
+.graph .color8 { fill: #000 }
+.graph .color9 { fill: #F10 }
+.graph .color10 { fill :#F2F }
+.graph .color11 { fill: #03F }
+.graph .color12 { fill: #94F }
+.graph .color13 { fill: #059 }
+.graph .color14 { fill: #960 }
+.graph .color15 { fill: #670 }
+.graph .color16 { fill: #280 }
+.legend .color1 { background-color: #F00 }
+.legend .color2 { background-color: #F90 }
+.legend .color3 { background-color: #FC0 }
+.legend .color4 { background-color: #93C }
+.legend .color5 { background-color: #069 }
+.legend .color6 { background-color: #090 }
+.legend .color7 { background-color: #630 }
+.legend .color8 { background-color: #000 }
+.legend .color9 { background-color: #F10 }
+.legend .color10 { background-color: #F2F }
+.legend .color11 { background-color: #03F }
+.legend .color12 { background-color: #94F }
+.legend .color13 { background-color: #059 }
+.legend .color14 { background-color: #960 }
+.legend .color15 { background-color: #670 }
+.legend .color16 { background-color: #280 }
+
+/* event graph and event legends */
+.graph { width: 100%; margin-bottom: 1rem }
+.graph span { display: none }
+.graph rect { pointer-events: all }
+.graph rect:hover { fill: red }
+
+/* event legends with colored dots */
+.legend { line-height: 1rem; margin-bottom: 2rem; margin-left: 0; padding: 0 }
+.legend li { font-weight: normal; font-size: 0.9rem; font-family: monospace; display: inline-block; margin: 0 1rem 1rem 0 }
+.legend span { border-radius: 100%; width: 0.6rem; height: 0.6rem; margin-right: 0.1rem; display: inline-block; padding: 0; overflow: hidden }
+
+/**
+ * event table
+ */
+.events li { display: block; padding: 0.5rem 1rem; margin: 0 }
+.events ul { display: inline-block }
+.events ul li { margin: 0; padding: 0; display: inline }
+
+/**
+ * security feeds
+ */
+.feeds { margin: 0 0 1rem 0; list-style-type: none }
+.feeds .legend { margin: 0 } 
+.feeds .subs { font-size: 2.4rem; line-height: 2.4rem; float: left; width: 48%; font-family: monospace }
+.feeds .subs span { display: block; font-size: 0.7rem; line-height: 1rem; margin-top: 0.5rem; font-family: monospace }
+.subscriptions table { margin-bottom: 1rem }
+
+.event-checkboxes { padding: 0 }
+.event-checkboxes input { margin: 0 0.5rem }
+.event-checkboxes li { list-style-type: none; padding: 0; margin: 0 }
+.event-checkboxes label { font-size: 0.8rem }
+
+.secret-url { padding: 1rem; font-size: 1rem; color: #666; width: 25rem; background-color: #EEE }
+
+button.hidden-default-submit { position: absolute; left: -10000px; top: -10000px; z-index: 100000 g.js

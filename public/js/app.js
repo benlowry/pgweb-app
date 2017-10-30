@@ -73,7 +73,6 @@ function apiCall(method, path, params, cb) {
     return
   }
   var timeout = 300000; // 5 mins is enough
-  console.log('apiCall', method, path, params, window.bookmarkid)
   $.ajax({
     timeout: timeout,
     url: "/api" + path + '?bookmarkid=' + window.bookmarkid,
@@ -90,7 +89,6 @@ function apiCall(method, path, params, cb) {
       if (status == "timeout") {
         return cb({ error: "Query timeout after " + (timeout / 1000) + "s" });
       }
-      console.log(xhr, status, data)
       cb(jQuery.parseJSON(xhr.responseText));
     }
   });

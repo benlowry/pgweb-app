@@ -1,7 +1,8 @@
 const childProcess = require('child_process')
-const Dashboard = require('zzzxxxyyy')
+const HTML = require('server-html')
 const http = require('http')
 const path = require('path')
+const Redis = require('../redis.js')
 const util = require('util')
 const processes = {}
 const processList = []
@@ -14,9 +15,9 @@ module.exports = {
 }
 
 function killIdleProcesses () {
-  const now = Dashboard.Timestamp.now
+  const timestamp = new Date().getTime() / 1000
   for (const pgweb of processList) {
-    if (now - pgweb.lastRequest > 240) {
+    if (timestamp - pgweb.lastRequest > 240) {
       pgweb.kill()
       processList.splice(processList.indexOf(pgweb), 1)
       delete (processes[pgweb.bookmarkid])
@@ -25,7 +26,6 @@ function killIdleProcesses () {
 }
 
 async function renderPage (req, res) {
-  console.log('pgweb#' + req.method, req.url, req.bodyRaw)
   if (!req.query || !req.query.bookmarkid) {
     res.statusCode = 500
     return res.end()
@@ -49,12 +49,10 @@ async function renderPage (req, res) {
     pgweb.bookmarkid = req.query.bookmarkid
     processList.push(pgweb)
     // let it start
-    console.log('start and wait')
     req.data = {pgweb, bookmark}
     return setTimeout(() => {
       req.url = '/'
       const port = pgweb.spawnargs[pgweb.spawnargs.length - 1]
-      console.log('passing request', port)
       return passRequest(req, res, port)
     }, 2000)
   }
@@ -63,12 +61,12 @@ async function renderPage (req, res) {
   if (req.url.startsWith('/pgweb/')) {
     req.url = '/?' + req.url.split('?')[1]
   }
-  pgweb.lastRequest = Dashboard.Timestamp.now
+  pgweb.lastRequest = new Date().getTime() / 1000
   return passRequest(req, res, port)
 }
 
 function loadBookmark (userid, bookmarkid, callback) {
-  return Dashboard.Redis.hgetall(`bookmark:${bookmarkid}`, (_, bookmark) => {
+  return Redis.hgetall(`bookmark:${bookmarkid}`, (_, bookmark) => {
     if (!bookmark || bookmark.userid !== userid) {
       return callback()
     }
@@ -116,19 +114,20 @@ function passRequest (req, res, port) {
     })
     return proxyResponse.addListener('end', () => {
       if (proxyResponse.statusCode === 404) {
-        return Dashboard.Response.throw404(req, res)
+        res.statusCode = 404
+        return res.end()
       }
       res.statusCode = proxyResponse.statusCode
       res.headers = proxyResponse.headers
       if (proxyResponse.statusCode === 200) {
-        console.log(Buffer.concat(chunks).toString('utf-8'))
         const contentType = proxyResponse.headers['content-type'] || 'text/html'
         if (contentType.split(';')[0] === 'text/html') {
           // note: discarding pgweb's output due to modifications
-          const doc = Dashboard.HTML.parse(req.route.pageHTML)
+          const doc = HTML.parse(req.route.pageHTML)
           doc.renderTemplate(req.data.bookmark, 'navbar-html-template', 'navbar-template')
           preSelectPageContent(req, doc)
-          return Dashboard.Response.end(req, res, doc)
+          res.setHeader('content-type', 'text/html')
+          return res.end(doc.toString())
         }
       }
       if (chunks && chunks.length) {
@@ -141,13 +140,12 @@ function passRequest (req, res, port) {
     })
   })
   proxyRequest.on('error', () => {
-    return Dashboard.Response.throw500(req, res)
-  })
-  req.addListener('error', () => {
-    return Dashboard.Response.throw500(req, res)
+    res.statusCode = 500
+    return res.end()
   })
   if (req.bodyRaw) {
     proxyRequest.write(req.bodyRaw)
   }
   return proxyRequest.end()
 }
+

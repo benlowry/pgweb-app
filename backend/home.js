@@ -1,5 +1,8 @@
-const Dashboard = require('zzzxxxyyy')
+const HTML = require('server-html')
+const Redis = require('../redis.js')
 const util = require('util')
+const characters = process.env.UUID_ENCODING_CHARACTERS
+const charactersLength = characters.length
 
 module.exports = {
   get: renderPage,
@@ -10,9 +13,8 @@ module.exports = {
 }
 
 async function renderPage (req, res, messageTemplate) {
-  console.log('renderPage', req.userid, req.route)
   const sessionHTML = req.route.pageHTML.replace('$' + '{sessionid}', req.sessionid)
-  const doc = Dashboard.HTML.parse(sessionHTML, __dirname)
+  const doc = HTML.parse(sessionHTML, __dirname)
   if (messageTemplate) {
     doc.renderTemplate(null, messageTemplate, 'status-container')
   }
@@ -25,7 +27,8 @@ async function renderPage (req, res, messageTemplate) {
     const createForms = doc.getElementById('create-forms')
     createForms.classList.add('no-bookmarks')
   }
-  return Dashboard.Response.end(req, res, doc)
+  res.setHeader('content-type', 'text/html')
+  return res.end(doc.toString())
 }
 
 async function submitForm (req, res) {
@@ -68,24 +71,25 @@ async function submitForm (req, res) {
   }
   bookmark.name = req.body.name
   bookmark.userid = req.userid
-  const uuidAsync = util.promisify(Dashboard.UUID.generateUnique)
+  const uuidAsync = util.promisify(generateUnique)
   bookmark.bookmarkid = await uuidAsync()
-  const lpushAsync = util.promisify(Dashboard.Redis.lpush)
+  const lpushAsync = util.promisify(Redis.lpush)
   await lpushAsync(`bookmarks:${req.userid}`, bookmark.bookmarkid)
-  const hsetAsync = util.promisify(Dashboard.Redis.hset)
+  const hsetAsync = util.promisify(Redis.hset)
   for (const property in bookmark) {
     if (bookmark[property]) {
       await hsetAsync(`bookmark:${bookmark.bookmarkid}`, property, bookmark[property])
     }
   }
-  await hsetAsync(`bookmark:${bookmark.bookmarkid}`, 'created', Dashboard.Timestamp.now)
+  const timestamp = new Date().getTime() / 1000
+  await hsetAsync(`bookmark:${bookmark.bookmarkid}`, 'created', timestamp)
   res.statusCode = 303
   res.setHeader('location', `/pgweb?bookmarkid=${bookmark.bookmarkid}`)
   return res.end()
 }
 
 async function listBookmarks (userid) {
-  const lrangeAsync = util.promisify(Dashboard.Redis.lrange)
+  const lrangeAsync = util.promisify(Redis.lrange)
   const deleteStaleAsync = util.promisify(deleteStaleBookmark)
   const loadBookmarkAsync = util.promisify(loadBookmark)
   const bookmarkids = await lrangeAsync(`bookmarks:${userid}`, 0, -1)
@@ -102,7 +106,7 @@ async function listBookmarks (userid) {
 }
 
 function loadBookmark (userid, bookmarkid, callback) {
-  return Dashboard.Redis.hgetall(`bookmark:${bookmarkid}`, (_, bookmark) => {
+  return Redis.hgetall(`bookmark:${bookmarkid}`, (_, bookmark) => {
     if (!bookmark) {
       return callback()
     }
@@ -114,7 +118,20 @@ function loadBookmark (userid, bookmarkid, callback) {
 }
 
 function deleteStaleBookmark (userid, bookmarkid, callback) {
-  return Dashboard.Redis.lrem(`bookmarks:${userid}`, 0, bookmarkid, () => {
+  return Redis.lrem(`bookmarks:${userid}`, 0, bookmarkid, () => {
     return callback()
+  })
+}
+
+function generateUnique (callback) {
+  return Redis.incrby(`bookmarkid`, 1, (_, number) => {
+    let encoded = ''
+    let num = number
+    while (num) {
+      const remainder = num % charactersLength
+      num = Math.floor(num / charactersLength)
+      encoded = characters[remainder].toString() + encoded
+    }
+    return callback(null, encoded)
   })
 }

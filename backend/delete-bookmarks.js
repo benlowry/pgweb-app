@@ -1,5 +1,6 @@
-const Dashboard = require('zzzxxxyyy')
 const Home = require('./home.js')
+const HTML = require('server-html')
+const Redis = require('../redis.js')
 const util = require('util')
 
 module.exports = {
@@ -8,17 +9,16 @@ module.exports = {
 }
 
 async function renderPage (req, res, messageTemplate) {
-  console.log('render delete bookmarks')
-  const doc = Dashboard.HTML.parse(req.route.pageHTML, __dirname)
+  const doc = HTML.parse(req.route.pageHTML, __dirname)
   const bookmarks = await Home.listBookmarks(req.userid)
   if (messageTemplate) {
     doc.renderTemplate(null, messageTemplate, 'status-container')
   }
-  console.log(bookmarks)
   if (bookmarks && bookmarks.length) {
     doc.renderList(bookmarks, 'bookmark-item-template', 'bookmarks-list')
   }
-  return Dashboard.Response.end(req, res, doc)
+  res.setHeader('content-type', 'text/html')
+  return res.end(doc.toString())
 }
 
 async function submitForm (req, res) {
@@ -42,8 +42,8 @@ async function submitForm (req, res) {
 }
 
 function deleteBookmark (userid, bookmarkid, callback) {
-  return Dashboard.Redis.del(`bookmark:${bookmarkid}`, () => {
-    return Dashboard.Redis.lrem(`bookmarks:${userid}`, 0, bookmarkid, () => {
+  return Redis.del(`bookmark:${bookmarkid}`, () => {
+    return Redis.lrem(`bookmarks:${userid}`, 0, bookmarkid, () => {
       return callback()
     })
   })
