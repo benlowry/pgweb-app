@@ -1,6 +1,6 @@
 {
   "title": "PGWeb SaaS",
-  "url": "${SERVER_ADDRESS}",
+  "url": "${SERVER_ADDRESS}/home",
   "icon": "${SERVER_ADDRESS}/public/app.png",
   "icons": [],
   "screenshots": [
