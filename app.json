@@ -12,9 +12,11 @@
     "userappstore.com": true
   },
   "header": {
-    "backgroundColor": "rgba(121, 88, 159, 0.25)"
+    "backgroundColor": "#160E1F",
+    "textColor": "#8C8791"
   },
   "navbar": {
-    "backgroundColor": "rgba(121,88,159, 0.5)"
+    "backgroundColor": "#2F1F42",
+    "textColor": "#A7A8B2"
   }
 }
