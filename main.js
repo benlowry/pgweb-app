@@ -15,8 +15,6 @@ const appjson = fs.readFileSync(`${__dirname}/app.json`).toString('utf-8').split
 
 async function receiveRequest (req, res) {
   res.statusCode = 200
-  req.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  req.userAgent = req.headers['user-agent'] || ''
   req.query = url.parse(req.url, true).query
   req.urlPath = req.url.split('?')[0]
   if (req.urlPath === '/app.json') {
@@ -27,10 +25,8 @@ async function receiveRequest (req, res) {
   if (req.urlPath.startsWith('/public/')) {
     return StaticFile.get(req, res)
   }
-  if (req.urlPath.startsWith('/website/')) {
-    return StaticPage.get(req, res)
-  }
   req.route = matchRoute(req.urlPath)
+  console.log('route', req.route)
   if (!req.route) {
     res.statusCode = 404
     return res.end()
@@ -130,10 +126,13 @@ function validateUserSession (req, callback) {
 
 function matchRoute (urlPath) {
   const fullPath = path.join(`${__dirname}/backend`, urlPath)
+  console.log('fullPath', fullPath)
   const htmlFile = `${fullPath}.html`
   const htmlExists = fs.existsSync(htmlFile)
+  console.log('htmlFile', htmlExists, htmlFile)
   const jsFile = `${fullPath}.js`
   const jsExists = fs.existsSync(jsFile)
+  console.log('jsFile', jsExists, jsFile)
   const route = {}
   if (htmlExists) {
     route.pageHTML = fs.readFileSync(htmlFile).toString('utf-8')
