@@ -126,6 +126,7 @@ function passRequest (req, res, port) {
           const doc = HTML.parse(req.route.pageHTML)
           doc.renderTemplate(req.data.bookmark, 'navbar-html-template', 'navbar-template')
           preSelectPageContent(req, doc)
+          doc.getElementById('base-tag').setAttribute('href', process.env.SERVER_ADDRESS)
           res.setHeader('content-type', 'text/html')
           return res.end(doc.toString())
         }

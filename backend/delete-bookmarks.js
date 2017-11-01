@@ -10,6 +10,7 @@ module.exports = {
 
 async function renderPage (req, res, messageTemplate) {
   const doc = HTML.parse(req.route.pageHTML, __dirname)
+  doc.getElementById('base-tag').setAttribute('href', process.env.SERVER_ADDRESS)  
   const bookmarks = await Home.listBookmarks(req.userid)
   if (messageTemplate) {
     doc.renderTemplate(null, messageTemplate, 'status-container')

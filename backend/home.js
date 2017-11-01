@@ -27,6 +27,7 @@ async function renderPage (req, res, messageTemplate) {
     const createForms = doc.getElementById('create-forms')
     createForms.classList.add('no-bookmarks')
   }
+  doc.getElementById('base-tag').setAttribute('href', process.env.SERVER_ADDRESS)
   res.setHeader('content-type', 'text/html')
   return res.end(doc.toString())
 }
