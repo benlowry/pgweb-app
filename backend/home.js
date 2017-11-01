@@ -1,5 +1,5 @@
 const HTML = require('server-html')
-const Redis = require('../redis.js')
+const Redis = require('../core/redis.js')
 const util = require('util')
 const characters = process.env.UUID_ENCODING_CHARACTERS
 const charactersLength = characters.length
