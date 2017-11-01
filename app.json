@@ -2,6 +2,8 @@
   "title": "PGWeb the app",
   "url": "${SERVER_ADDRESS}/home",
   "icon": "${SERVER_ADDRESS}/public/app.png",
+  "publisher": "benlowry@outlook.com",
+  "website": "https://github.com/sosedoff/pgweb",
   "icons": [],
   "screenshots": [
     "${SERVER_ADDRESS}/public/screenshot1.jpg",
