@@ -9,6 +9,7 @@
     "${SERVER_ADDRESS}/public/screenshot3.jpg"
   ],
   "publisher": {
+    "name": "Ben Lowry",
     "email": "benlowry@outlook.com",
     "website": "https://github.com/sosedoff/pgweb"
   },
