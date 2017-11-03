@@ -2,22 +2,21 @@
   "title": "PGWeb the app",
   "url": "${SERVER_ADDRESS}/home",
   "icon": "${SERVER_ADDRESS}/public/app.png",
-  "email": "benlowry@outlook.com",
-  "publisher": {
-    "userappstore.com": "acct_1BK85gJEtCsUKsvx"
-  },
-  "website": "https://github.com/sosedoff/pgweb",
   "icons": [],
   "screenshots": [
     "${SERVER_ADDRESS}/public/screenshot1.jpg",
     "${SERVER_ADDRESS}/public/screenshot2.jpg",
     "${SERVER_ADDRESS}/public/screenshot3.jpg"
   ],
+  "publisher": {
+    "email": "benlowry@outlook.com",
+    "website": "https://github.com/sosedoff/pgweb"
+  },
+  "connect": {
+    "userappstore.com": "acct_1BK85gJEtCsUKsvx"
+  },
   "allow": {
     "userappstore.com": true
-  },
-  "stripe-connect": {
-    "userappstore.com": "acct_132456"
   },
   "header": {
     "backgroundColor": "#160E1F",
