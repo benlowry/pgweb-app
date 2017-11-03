@@ -2,7 +2,10 @@
   "title": "PGWeb the app",
   "url": "${SERVER_ADDRESS}/home",
   "icon": "${SERVER_ADDRESS}/public/app.png",
-  "publisher": "benlowry@outlook.com",
+  "email": "benlowry@outlook.com",
+  "publisher": {
+    "userappstore.com": "acct_1BK85gJEtCsUKsvx"
+  },
   "website": "https://github.com/sosedoff/pgweb",
   "icons": [],
   "screenshots": [
@@ -12,6 +15,9 @@
   ],
   "allow": {
     "userappstore.com": true
+  },
+  "stripe-connect": {
+    "userappstore.com": "acct_132456"
   },
   "header": {
     "backgroundColor": "#160E1F",
